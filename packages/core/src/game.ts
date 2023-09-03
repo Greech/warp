@@ -1,14 +1,16 @@
 import { Engine } from "./engine";
 
-export class GameLoop {
-    private ecsEngine: Engine;
+export class Game {
+    private engine: Engine;
     private lastTimestamp: number = 0;
     private fixedUpdateRate: number = 1 / 60; // 60 updates per second
     private isRunning: boolean = false;
     private animationFrameId: number | null = null;
 
-    constructor(ecsEngine: Engine) {
-        this.ecsEngine = ecsEngine;
+    constructor() {}
+
+    public initilize(GameModule: new () => any) {
+        this.engine = new Engine(GameModule);
     }
 
     public start() {
@@ -44,14 +46,14 @@ export class GameLoop {
         let deltaTime = this.calculateDeltaTime(timestamp);
         
         // Process user input with maximum possible rate
-        this.ecsEngine.processInput();
+        this.engine.processInput();
 
         while (deltaTime >= this.fixedUpdateRate) {
-            this.ecsEngine.update(this.fixedUpdateRate);
+            this.engine.update(this.fixedUpdateRate);
             deltaTime -= this.fixedUpdateRate;
         }
 
-        this.ecsEngine.render();
+        this.engine.render();
 
         this.animationFrameId = requestAnimationFrame(() => this.gameLoop(timestamp));
     }
