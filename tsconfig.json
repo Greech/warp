@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "outDir": "./dist/",
+    "noImplicitAny": true,
+    "module": "esnext",
+    "target": "es5",
+    "allowJs": true,
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "baseUrl": ".",
+    "paths": {
+      "@warp/core": ["packages/core/public-api.ts"],
+      "@warp/state": ["packages/state/public-api.ts"],
+      "@warp/ui": ["packages/ui/public-api.ts"]
+    }
+  }
+}
