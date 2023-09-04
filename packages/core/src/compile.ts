@@ -16,21 +16,21 @@ function compile(GameModule: new () => IModule) {
 
     // 1. parent (Parent state module )
 
-    const applicationMap = {
-        root: {
-            providers,
-            systems,
-            entities,
-            children: []
-        },
-        routeName1: {
-            providers,
-            systems,
-            entities,
-            // parent module name or pointert to class
-            parent,
-        }
-    };
+    // const applicationMap = {
+    //     root: {
+    //         providers,
+    //         systems,
+    //         entities,
+    //         children: []
+    //     },
+    //     routeName1: {
+    //         providers,
+    //         systems,
+    //         entities,
+    //         // parent module name or pointert to class
+    //         parent,
+    //     }
+    // };
 
     // state manager logic 
     // 1. Read the current state / initial state
@@ -44,9 +44,9 @@ function compile(GameModule: new () => IModule) {
     // make it in loop until no providers list in child 
 
     // same with the root providers
-    return {
-        providers,
-        systems,
-        entities,
-    }
+    // return {
+    //     providers,
+    //     systems,
+    //     entities,
+    // }
 }

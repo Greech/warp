@@ -1,53 +1,33 @@
-import 'reflect-metadata'; // Import required for metadata
-
-import { Injector } from './injector';
-import { BaseEntity, EntityManager } from './entity';
 import { ISystem } from './models';
-import { IModule } from './models/module.decorator';
+import { Injectable } from './models/injectable.decorator';
 
-type SystemConstructor = new () => ISystem;
-type EntityConstructor = new () => BaseEntity;
+export interface EngineState {
+    updaters: ISystem[],
+    renderers: ISystem[],
+    inputProcessors: ISystem[],
+}
 
+@Injectable()
 export class Engine {
-    private injector: Injector;
-    private updateSystems: ISystem[] = [];
-    private renderSystems: ISystem[] = [];
+    private state: EngineState = null;
 
-    constructor(GameModule: new () => any) {
-        this.injector = new Injector();
-        console.log('GameModule', GameModule);
-
-        const gameModule = new GameModule() as IModule;
-        console.log('gamemodule', gameModule);
-
-        // Register all providers
-        // this.injector.registerDependency(this.entityManager);
-
-        // add systems
-        // const systemClasses = this.discoverClasses<SystemConstructor>('ecs:system');
-        // this.systems = systemClasses.map(systemClass => {
-        //     return this.injector.instantiate<ISystem>(systemClass)
-        // });
-
-        // add enteties
-        // const entitiesClasses = this.discoverClasses<EntityConstructor>('ecs:entity');
-        // entitiesClasses.forEach(entityClass => {
-        //     this.entityManager.addEntity(new entityClass());
-        // });
+    updateState(state: EngineState): void {
+        this.state = { ...state };
     }
 
     processInput(): void {
-
+        this.state.inputProcessors.forEach(system => {
+        });
     }
 
     update(deltaTime: number) {
-        this.updateSystems.forEach(system => {
+        this.state.updaters.forEach(system => {
             system.update(deltaTime);
         });
     }
 
     render() {
-        this.renderSystems.forEach(system => {
+        this.state.renderers.forEach(system => {
             system.render();
         });
     }

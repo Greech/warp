@@ -1,5 +1,7 @@
+import { Injectable } from "../models/injectable.decorator";
 import { BaseEntity } from "./base-entity";
 
+@Injectable()
 export class EntityManager {
     private entities: BaseEntity[] = [];
 

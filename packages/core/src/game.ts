@@ -1,60 +1,35 @@
+import { Injector } from './injector';
 import { Engine } from "./engine";
+import { EntityManager } from './entity';
+import { GameLoop } from './game-loop';
 
 export class Game {
-    private engine: Engine;
-    private lastTimestamp: number = 0;
-    private fixedUpdateRate: number = 1 / 60; // 60 updates per second
-    private isRunning: boolean = false;
-    private animationFrameId: number | null = null;
+    private injector: Injector;
 
-    constructor() {}
+    constructor() {
+        this.injector = new Injector();
+        // Register all providers
+        // this.injector.registerDependency(this.entityManager);
+
+        // add systems
+        // const systemClasses = this.discoverClasses<SystemConstructor>('ecs:system');
+        // this.systems = systemClasses.map(systemClass => {
+        //     return this.injector.instantiate<ISystem>(systemClass);
+        // });
+
+        // add enteties
+        // const entitiesClasses = this.discoverClasses<EntityConstructor>('ecs:entity');
+        // entitiesClasses.forEach(entityClass => {
+        //     this.entityManager.addEntity(new entityClass());
+        // });
+    }
 
     public initilize(GameModule: new () => any) {
-        this.engine = new Engine(GameModule);
-    }
-
-    public start() {
-        if (this.isRunning) {
-            return;
-        }
-
-        this.isRunning = true;
-        this.gameLoop(0); // Start the loop
-    }
-
-    public stop() {
-        if (!this.isRunning) {
-            return;
-        }
-
-        this.isRunning = false;
-        if (this.animationFrameId !== null) {
-            cancelAnimationFrame(this.animationFrameId);
-            this.animationFrameId = null;
-        }
-    }
-
-    private calculateDeltaTime(currentTimestamp: number): number {
-        const deltaTime = (currentTimestamp - this.lastTimestamp) / 1000; // Convert to seconds
-        this.lastTimestamp = currentTimestamp;
-        return deltaTime;
-    }
-
-    private gameLoop(timestamp: number) {
-        if (!this.isRunning) return;
-
-        let deltaTime = this.calculateDeltaTime(timestamp);
-        
-        // Process user input with maximum possible rate
-        this.engine.processInput();
-
-        while (deltaTime >= this.fixedUpdateRate) {
-            this.engine.update(this.fixedUpdateRate);
-            deltaTime -= this.fixedUpdateRate;
-        }
-
-        this.engine.render();
-
-        this.animationFrameId = requestAnimationFrame(() => this.gameLoop(timestamp));
+        // create a tree of the game so you can easily manage the state whithin the game 
+        // register core providers
+        const coreProviders = [Engine, EntityManager, GameLoop];
+        coreProviders.forEach(provider => {
+            this.injector.registerDependency(provider);
+        });
     }
 }
