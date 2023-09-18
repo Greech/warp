@@ -13,8 +13,8 @@ export interface ModuleWithProviders<T> {
 }
 
 export interface ModuleConfig { 
-    imports?: InstanceCreator[],
-    providers?: InstanceCreator[] | any[] | ModuleWithProviders<any>[];
+    imports?: InstanceCreator<any>[] | ModuleWithProviders<any>[] | any[],
+    providers?: InstanceCreator[];
     systems?: InstanceCreator[],
     entities?: InstanceCreator[],
     // Handler for the game canvas

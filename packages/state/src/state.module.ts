@@ -10,11 +10,11 @@ export class StateModule {
             module: StateModule,
             providers: [
                 {
-                    provider: STATES,
+                    provide: STATES,
                     useValue: states,
                     multi: true
                 },
-                StateManager
+                StateManager,
             ],
         }
     }
@@ -24,7 +24,7 @@ export class StateModule {
             module: StateModule,
             providers: [
                 {
-                    provider: STATES,
+                    provide: STATES,
                     useValue: childStates,
                     multi: true
                 },

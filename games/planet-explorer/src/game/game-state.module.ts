@@ -17,7 +17,7 @@ const gameStates: GameState[] = [
 
 @Module({
     imports: [
-        StateModule.forRoot(gameStates).module,
+        StateModule.forRoot(gameStates),
     ]
 })
 export class GameStateModule {}
