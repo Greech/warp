@@ -1,5 +1,5 @@
 import { Engine } from './engine';
-import { Injectable } from './models/injectable.decorator';
+import { Injectable } from './meta/injectable';
 
 @Injectable()
 export class GameLoop {

@@ -1,4 +1,4 @@
-import { Injectable } from "../models/injectable.decorator";
+import { Injectable } from "../meta/injectable";
 import { BaseEntity } from "./base-entity";
 
 @Injectable()

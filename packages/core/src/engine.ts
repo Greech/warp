@@ -1,5 +1,5 @@
+import { Injectable } from './meta/injectable';
 import { ISystem } from './models';
-import { Injectable } from './models/injectable.decorator';
 
 export interface EngineState {
     updaters: ISystem[],

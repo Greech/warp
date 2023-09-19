@@ -1,4 +1,4 @@
-import { InstanceCreator } from "./module.decorator";
+import { InstanceCreator } from "./module";
 
 export interface SystemConfiguration {
     components: InstanceCreator[]

@@ -2,7 +2,7 @@ import { Injector } from './injector';
 import { Engine } from "./engine";
 import { EntityManager } from './entity';
 import { GameLoop } from './game-loop';
-import { IModule, InstanceCreator, ModuleWithProviders } from './models';
+import { IModule, InstanceCreator, ModuleWithProviders } from './meta';
 
 export class Game {
     private injector: Injector;
