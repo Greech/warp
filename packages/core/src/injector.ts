@@ -1,6 +1,8 @@
 import 'reflect-metadata';
 import { ClassProvider, ValueProvider } from './models/provider.model';
 
+export const INJECTOR = 'INJECTOR';
+
 export class Injector {
     private dependencies: Map<Function | string, any> = new Map();
     private multiDependencies: Map<Function | string, any[]> = new Map();

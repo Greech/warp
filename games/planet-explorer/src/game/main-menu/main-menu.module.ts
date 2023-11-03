@@ -1,4 +1,4 @@
-import { Module } from "@warp/core";
+import { IModule, Module } from "@warp/core";
 
 import { MenuEntity } from "./entities/menu.entity";
 

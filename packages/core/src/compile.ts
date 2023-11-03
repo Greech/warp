@@ -1,4 +1,5 @@
-import { IModule } from './models/module.decorator';
+import { IModule } from "./meta";
+
 function compile(GameModule: new () => IModule) {
     const gameModule = new GameModule;
 

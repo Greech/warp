@@ -1,71 +1,41 @@
-import { Injector } from './injector';
+// game.ts
 import { Engine } from "./engine";
 import { EntityManager } from './entity';
 import { GameLoop } from './game-loop';
-import { IModule, InstanceCreator, ModuleWithProviders } from './meta';
+import { Injector, INJECTOR } from "./injector";
+import { IModule, InstanceCreator } from './meta';
+import { ModuleRegistrar } from './registrar/module-registrar';
+import { ProviderRegistrar } from './registrar/provider-registrar';
 
 export class Game {
     private injector: Injector;
-    private moduleInstances: Map<Function, IModule> = new Map();
+    private moduleRegistrar: ModuleRegistrar;
+    private providerRegistrar: ProviderRegistrar;
 
     constructor() {
         this.injector = new Injector();
+        this.moduleRegistrar = new ModuleRegistrar();
+        this.providerRegistrar = new ProviderRegistrar();
     }
 
-    public initilize(GameModule: new () => any) {
+    public initialize(GameModule: new () => any) {
         const gameModule = new GameModule() as IModule; 
 
-        const coreProviders = [Engine, EntityManager, GameLoop];
-        coreProviders.forEach(provider => {
-            this.injector.registerDependency(provider);
-        });
+        const coreProviders = [
+            { provide: INJECTOR, useValue: this.injector },
+            Engine,
+            EntityManager,
+            GameLoop
+        ] as InstanceCreator[];
 
-        // register root providers
-        this.registerProviders(gameModule.config.providers);
-        const gameModules = gameModule.config.imports;
-        this.registerModules(gameModules);
+        this.providerRegistrar.registerProviders(coreProviders, this.injector);
 
-        // Register all providers for root level
-        this.moduleInstances.forEach((gameModule: IModule, key: Function) => {
-            this.registerProviders(gameModule.config.providers);
+        // Register modules and their providers
+        this.moduleRegistrar.registerModules(gameModule.config.imports, this.injector);
+        this.moduleRegistrar.getModuleInstances().forEach((gameModule: IModule) => {
+            this.providerRegistrar.registerProviders(gameModule.config.providers, this.injector);
         });
 
         console.log('this.injector', this.injector);
-    }
-
-    private registerModules(modules: InstanceCreator<any>[] | ModuleWithProviders<any>[] | any[] | null) {
-        modules.forEach(gameModule => {
-            let moduleInstance = null;
-
-            if(typeof gameModule === 'function') {
-                moduleInstance = new gameModule as IModule;
-                this.moduleInstances.set(gameModule, moduleInstance);
-            }
-
-            if(typeof gameModule === 'object' && gameModule.module) {
-                moduleInstance = new gameModule.module() as IModule;
-                const moduleProviders = moduleInstance.config.providers || [];
-                moduleInstance.config.providers = [
-                    ...moduleProviders,
-                    ...gameModule.providers
-                ]
-
-                this.moduleInstances.set(gameModule.module, moduleInstance);
-            }
-
-            const moduleImports = moduleInstance.config.imports; 
-            if(moduleImports && moduleImports.length > 0) {
-                this.registerModules(moduleImports);
-            }
-        });
-    }
-
-    private registerProviders(providers: InstanceCreator[] | null): void {
-        if(!providers) {
-            return;
-        }
-        providers.forEach(provider => {
-            this.injector.registerDependency(provider);
-        })
     }
 }

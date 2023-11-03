@@ -1,6 +1,6 @@
 export interface Provider {
     provide: string | Function;
-    multi: boolean;
+    multi?: boolean;
 }
 
 export interface ClassProvider extends Provider {

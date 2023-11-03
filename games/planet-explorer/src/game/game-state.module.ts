@@ -7,12 +7,15 @@ const gameStates: GameState[] = [
     {
         name: 'main-menu',
         module: MainMenuModule,
-        initial: true,
     },
     {
         name: 'gameplay',
         module: GameplayModule,
     },
+    {
+        name: '',
+        resetTo: 'main-menu'
+    }
 ]; 
 
 @Module({
