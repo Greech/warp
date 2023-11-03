@@ -14,22 +14,26 @@ export class Injector {
             return;
         }
         
-        if (dependency.multi) {
-            const existingMulti = this.multiDependencies.get(dependency.provide) || [];
+        dependency.multi ? this.registerMultiDependency(dependency) : this.registerSinglDependency(dependency);
+    }
 
-            if((dependency as ClassProvider).useClass) {
-                existingMulti.push(this.instantiate((dependency as ClassProvider).useClass as new (...args: any[]) => any));
-            } else {
-                existingMulti.push((dependency as ValueProvider).useValue);
-            }
-            this.multiDependencies.set(dependency.provide, existingMulti);
+    registerMultiDependency(dependency: ClassProvider | ValueProvider): void {
+        const existingMulti = this.multiDependencies.get(dependency.provide) || [];
+
+        if((dependency as ClassProvider).useClass) {
+            existingMulti.push(this.instantiate((dependency as ClassProvider).useClass as new (...args: any[]) => any));
         } else {
-            if((dependency as ClassProvider).useClass) {
-                const dependencyInstance = this.instantiate((dependency as ClassProvider).useClass as new (...args: any[]) => any);
-                this.dependencies.set(dependency.provide, dependencyInstance);
-            } else {
-                this.dependencies.set(dependency.provide, dependency);
-            }
+            existingMulti.push((dependency as ValueProvider).useValue);
+        }
+        this.multiDependencies.set(dependency.provide, existingMulti);
+    }
+
+    registerSinglDependency(dependency: ClassProvider | ValueProvider): void {
+        if((dependency as ClassProvider).useClass) {
+            const dependencyInstance = this.instantiate((dependency as ClassProvider).useClass as new (...args: any[]) => any);
+            this.dependencies.set(dependency.provide, dependencyInstance);
+        } else {
+            this.dependencies.set(dependency.provide, dependency);
         }
     }
 
